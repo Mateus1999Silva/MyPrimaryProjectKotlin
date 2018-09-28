@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context=".InformationClient">
+    tools:context=".InformationClient"
+    android:gravity="center">
 
     <TextView
         android:id="@+id/dados"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:hint="Sem Dados"/>
+        android:hint="Sem Dados"
+        android:textSize="20dp"/>
 
 </RelativeLayout>
