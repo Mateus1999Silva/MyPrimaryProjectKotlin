@@ -1,10 +1,10 @@
 package com.example.mateusoliveira.projectkotlin
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
 import kotlinx.android.synthetic.main.welcome.*
+
+
 
 class Welcome : AppCompatActivity() {
     private var stringBuilder = StringBuilder();
