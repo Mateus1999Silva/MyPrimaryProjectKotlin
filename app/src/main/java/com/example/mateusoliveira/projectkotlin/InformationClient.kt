@@ -19,78 +19,56 @@ class InformationClient : AppCompatActivity() {
         cpf.addTextChangedListener(mask("###.###.###-##", cpf))
 
         button.setOnClickListener {
-            if (!cpf.text.isEmpty() && !nome.text.isEmpty() && validationCpf(cpf.text.toString())) {
+            if (isEmpty(nome.text.toString())) {
+                nome?.error = "Preencha o campo";
+                nome?.isFocusable = true;
+                nome?.isFocusableInTouchMode = true;
+            }
+
+            if (isEmpty(cpf.text.toString())) {
+                textErrorCpf?.error = "Preencha o campo"
+                textErrorCpf?.isFocusable = true
+                textErrorCpf?.requestFocus()
+            }
+
+            if(!validationCpf(cpf.text.toString())){
+                textErrorCpf?.error = "Preencha com um CPF válido"
+                textErrorCpf?.isFocusable = true
+                textErrorCpf?.requestFocus()
+            }else{
                 var intent = Intent(this, Welcome::class.java)
                 intent.putExtra("cpf", cpf.text.toString())
                 intent.putExtra("nome", nome.text.toString())
                 startActivity(intent)
-            } else {
-                Toast.makeText(this, "Dados Invalidos", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun replaceChars(cpfFull : String) : String{
+    private fun isSequenceValidCpf(cpf: String): Boolean {
+        if (cpf.equals("00000000000") ||
+                cpf.equals("11111111111") ||
+                cpf.equals("22222222222") || cpf.equals("33333333333") ||
+                cpf.equals("44444444444") || cpf.equals("55555555555") ||
+                cpf.equals("66666666666") || cpf.equals("77777777777") ||
+                cpf.equals("88888888888") || cpf.equals("99999999999")) {
+            return false
+        }
+        return true
+    }
+
+    private fun replaceChars(cpfFull: String): String {
         return cpfFull.replace(".", "").replace("-", "")
                 .replace("(", "").replace(")", "")
                 .replace("/", "").replace(" ", "")
                 .replace("*", "")
     }
 
-    fun mask(mask : String, etCpf : EditText) : TextWatcher{
-        val textWatcher : TextWatcher = object : TextWatcher {
-            var isUpdating : Boolean = false
-            var oldString : String = ""
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val str = replaceChars(s.toString())
-                var cpfWithMask = ""
-
-                if (count == 0)//is deleting
-                    isUpdating = true
-
-                if (isUpdating){
-                    oldString = str
-                    isUpdating = false
-                    return
-                }
-
-                var i = 0
-                for (m : Char in mask.toCharArray()){
-                    if (m != '#' && str.length > oldString.length){
-                        cpfWithMask += m
-                        continue
-                    }
-                    try {
-                        cpfWithMask += str.get(i)
-                    }catch (e : Exception){
-                        break
-                    }
-                    i++
-                }
-
-                isUpdating = true
-                etCpf.setText(cpfWithMask)
-                etCpf.setSelection(cpfWithMask.length)
-
-            }
-
-            override fun afterTextChanged(editable: Editable) {
-
-            }
-        }
-
-        return textWatcher
-    }
-
-
     fun validationCpf(cpf: String): Boolean {
         val cpfClean = cpf.replace(".", "").replace("-", "")
 
-        //## check if size is eleven
+        if (!isSequenceValidCpf(cpf))
+            return false
+
         if (cpfClean.length != 11)
             return false
 
@@ -143,6 +121,62 @@ class InformationClient : AppCompatActivity() {
             return false
 
         return true
+    }
+
+    private fun isEmpty(dado: String): Boolean {
+        if (dado.isEmpty() || dado.equals(null))
+            return true
+
+        return false
+    }
+
+    fun mask(mask: String, etCpf: EditText): TextWatcher {
+        val textWatcher: TextWatcher = object : TextWatcher {
+            var isUpdating: Boolean = false
+            var oldString: String = ""
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val str = replaceChars(s.toString())
+                var cpfWithMask = ""
+
+                if (count == 0)//is deleting
+                    isUpdating = true
+
+                if (isUpdating) {
+                    oldString = str
+                    isUpdating = false
+                    return
+                }
+
+                var i = 0
+                for (m: Char in mask.toCharArray()) {
+                    if (m != '#' && str.length > oldString.length) {
+                        cpfWithMask += m
+                        continue
+                    }
+                    try {
+                        cpfWithMask += str.get(i)
+                    } catch (e: Exception) {
+                        break
+                    }
+                    i++
+                }
+
+                isUpdating = true
+                etCpf.setText(cpfWithMask)
+                etCpf.setSelection(cpfWithMask.length)
+
+            }
+
+            override fun afterTextChanged(editable: Editable) {
+
+            }
+        }
+
+        return textWatcher
     }
 }
 
