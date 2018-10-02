@@ -9,20 +9,21 @@ import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_information_client.*
 
 import android.widget.Toast
+import com.example.mateusoliveira.projectkotlin.model.Pessoa
+import java.io.Serializable
 
 class InformationClient : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_information_client)
-
         cpf.addTextChangedListener(mask("###.###.###-##", cpf))
 
         button.setOnClickListener {
             if (isEmpty(nome.text.toString())) {
-                nome?.error = "Preencha o campo";
-                nome?.isFocusable = true;
-                nome?.isFocusableInTouchMode = true;
+                nome?.error = "Preencha o campo"
+                nome?.isFocusable = true
+                nome?.isFocusableInTouchMode = true
             }
 
             if (isEmpty(cpf.text.toString())) {
@@ -36,9 +37,10 @@ class InformationClient : AppCompatActivity() {
                 textErrorCpf?.isFocusable = true
                 textErrorCpf?.requestFocus()
             }else{
-                var intent = Intent(this, Welcome::class.java)
-                intent.putExtra("cpf", cpf.text.toString())
-                intent.putExtra("nome", nome.text.toString())
+                var pessoa = Pessoa(cpf.text.toString(), nome.text.toString())
+                var intent = Intent(this, Welcome::class.java).apply {
+                    putExtra("pessoa", pessoa as Serializable)
+                }
                 startActivity(intent)
             }
         }

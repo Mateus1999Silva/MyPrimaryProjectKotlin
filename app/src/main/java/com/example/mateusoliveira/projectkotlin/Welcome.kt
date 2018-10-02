@@ -2,6 +2,7 @@ package com.example.mateusoliveira.projectkotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.example.mateusoliveira.projectkotlin.model.Pessoa
 import kotlinx.android.synthetic.main.welcome.*
 
 
@@ -13,12 +14,11 @@ class Welcome : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.welcome)
 
-        val nomeDado: String = intent.getStringExtra("nome")
-        val cpfDado: String = intent.getStringExtra("cpf")
+        val pessoa= intent.extras.get("pessoa") as Pessoa
         dados.text = stringBuilder.append("\n")
-                .append(cpfDado)
+                .append(pessoa.cpf)
                 .append("\n")
-                .append(nomeDado);
+                .append(pessoa.nome);
     }
 
 }
