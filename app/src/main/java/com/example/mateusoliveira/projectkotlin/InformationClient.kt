@@ -21,26 +21,9 @@ class InformationClient : AppCompatActivity() {
         cpf.addTextChangedListener(mask("###.###.###-##", cpf))
 
         button.setOnClickListener {
-            if (isEmpty(nome.text.toString())) {
-                nome?.error = "Preencha o campo"
-                nome?.isFocusable = true
-                nome?.isFocusableInTouchMode = true
-            }
-
-            if (isEmpty(cpf.text.toString())) {
-                textErrorCpf?.error = "Preencha o campo"
-                textErrorCpf?.isFocusable = true
-                textErrorCpf?.requestFocus()
-            }
-
-            if(!validationCpf(cpf.text.toString())){
-                textErrorCpf?.error = "Preencha com um CPF válido"
-                textErrorCpf?.isFocusable = true
-                textErrorCpf?.requestFocus()
-            }else{
+            if (validationCampos()) {
                 nome.clearFocus()
-                textErrorCpf.clearFocus()
-                textErrorCpf.visibility = View.INVISIBLE
+                textErrorCpf.error = null
                 var pessoa = Pessoa(cpf.text.toString(), nome.text.toString())
                 var intent = Intent(this, Welcome::class.java).apply {
                     putExtra("pessoa", pessoa as Serializable)
@@ -49,6 +32,29 @@ class InformationClient : AppCompatActivity() {
             }
         }
     }
+
+    private fun validationCampos():Boolean{
+        if (isEmpty(nome.text.toString())) {
+            nome?.error = "Preencha o campo"
+            nome?.requestFocus()
+            return false
+        }
+
+        if (isEmpty(cpf.text.toString())) {
+            textErrorCpf?.error = "Preencha o campo"
+            textErrorCpf?.requestFocus()
+            return false
+        }
+
+        if (!validationCpf(cpf.text.toString())) {
+            textErrorCpf?.error = "Preencha com um CPF válido"
+            textErrorCpf?.requestFocus()
+            return false
+        }
+
+        return true
+    }
+
 
     private fun isSequenceValidCpf(cpf: String): Boolean {
         if (cpf.equals("00000000000") ||
