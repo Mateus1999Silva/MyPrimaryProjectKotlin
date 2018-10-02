@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_information_client.*
 
@@ -37,6 +38,9 @@ class InformationClient : AppCompatActivity() {
                 textErrorCpf?.isFocusable = true
                 textErrorCpf?.requestFocus()
             }else{
+                nome.clearFocus()
+                textErrorCpf.clearFocus()
+                textErrorCpf.visibility = View.INVISIBLE
                 var pessoa = Pessoa(cpf.text.toString(), nome.text.toString())
                 var intent = Intent(this, Welcome::class.java).apply {
                     putExtra("pessoa", pessoa as Serializable)
@@ -68,7 +72,7 @@ class InformationClient : AppCompatActivity() {
     fun validationCpf(cpf: String): Boolean {
         val cpfClean = cpf.replace(".", "").replace("-", "")
 
-        if (!isSequenceValidCpf(cpf))
+        if (!isSequenceValidCpf(cpfClean))
             return false
 
         if (cpfClean.length != 11)
